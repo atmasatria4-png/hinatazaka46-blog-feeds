@@ -1,8 +1,9 @@
 {
   "name": "hinatazaka46-blog-feeds",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "check": "bun run src/index.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/cheerio": "^1.0.0"
