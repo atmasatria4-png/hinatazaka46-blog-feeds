@@ -1,5 +1,5 @@
 export interface Blog {
-  id: string;
-  title: string;
-  url: string;
+  readonly id: string
+  readonly title: string
+  readonly url: string
 }

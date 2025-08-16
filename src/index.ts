@@ -1,24 +1,28 @@
-import { DISCORD_WEBHOOK } from "./constants"
 import type { Blog } from "./types/blog"
 import { getLatestBlog } from "./utils/blog"
 import { notifyDiscord } from "./utils/discord"
 import { loadLastSeen, saveLastSeen } from "./utils/lastSeen"
-
-if (!DISCORD_WEBHOOK) {
-  console.error("❌ Missing DISCORD_WEBHOOK!")
-  process.exit(1)
-}
+import { log } from "./utils/logger"
+import { validateEnvironment } from "./utils/validation"
 
 const main = async (): Promise<void> => {
-  const lastSeen: string | null = loadLastSeen()
-  const blog: Blog = await getLatestBlog()
+  try {
+    validateEnvironment()
 
-  if (blog.id !== lastSeen) {
-    console.log("🔔 New blog detected:", blog.title)
-    await notifyDiscord(blog)
-    saveLastSeen(blog.id)
-  } else {
-    console.log("✅ No new blog.")
+    const lastSeen: string | null = loadLastSeen()
+    const blog: Blog = await getLatestBlog()
+
+    if (blog.id !== lastSeen) {
+      log(`🔔 New blog detected: ${blog.title}`)
+      await notifyDiscord(blog)
+      saveLastSeen(blog.id)
+      log(`✅ Notification sent and state saved.`)
+    } else {
+      log(`✅ No new blog.`)
+    }
+  } catch (error) {
+    console.error("❌ Error in main process:", error)
+    process.exit(1)
   }
 }
 
