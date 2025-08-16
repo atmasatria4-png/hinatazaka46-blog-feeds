@@ -17,7 +17,7 @@ export const getLatestBlog = async (): Promise<Blog> => {
 
     const html: string = await res.text()
     const $: cheerio.CheerioAPI = cheerio.load(html)
-    
+
     const latestBlog = $(BLOG_ELEMENT).first()
     if (latestBlog.length === 0) throw new BlogFetchError("❌ No blog entries found on the page")
 

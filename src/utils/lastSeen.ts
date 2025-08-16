@@ -32,7 +32,7 @@ export const saveLastSeen = (latest: string): void => {
       lastSeen: latest,
       lastUpdated: new Date().toISOString()
     }
-    
+
     writeFileSync(STATE_FILE, JSON.stringify(stateData, null, 2))
   } catch (error) {
     throw new StateFileError("❌ Failed to save last seen state", error)
