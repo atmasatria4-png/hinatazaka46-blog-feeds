@@ -1,4 +1,6 @@
+import type { LastSeen } from "./seen"
+
 export interface StateData {
-  lastSeen: string
+  lastSeen: LastSeen
   lastUpdated?: string
 }

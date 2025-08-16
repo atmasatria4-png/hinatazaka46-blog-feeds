@@ -1,6 +1,7 @@
-import { readFileSync, writeFileSync } from "fs"
+import { existsSync, readFileSync, writeFileSync } from "fs"
 import { STATE_FILE } from "../constants"
 import type { StateData } from "../types/state"
+import type { LastSeen } from "../types/seen"
 
 export class StateFileError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -9,27 +10,33 @@ export class StateFileError extends Error {
   }
 }
 
-export const loadLastSeen = (): string | null => {
+export const loadLastSeen = (): StateData => {
   try {
-    const data: string = readFileSync(STATE_FILE, "utf-8")
-    const parsed: StateData = JSON.parse(data)
+    if (existsSync(STATE_FILE)) {
+      const data: string = readFileSync(STATE_FILE, "utf-8")
+      const parsed: StateData = JSON.parse(data)
+  
+      if (typeof parsed.lastSeen !== "object") throw new StateFileError("❌ Invalid state file format: lastSeen must be an object")
+  
+      return parsed
+    }
 
-    if (typeof parsed.lastSeen !== "string") throw new StateFileError("❌ Invalid state file format: lastSeen must be a string")
-
-    return parsed.lastSeen
+    return {
+      lastSeen: {},
+      lastUpdated: undefined
+    }
   } catch (error: any) {
     if (error instanceof SyntaxError) throw new StateFileError("❌ State file contains invalid JSON", error)
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null
     throw new StateFileError("❌ Failed to load last seen state", error)
   }
 }
 
-export const saveLastSeen = (latest: string): void => {
-  if (!latest || typeof latest !== "string") throw new StateFileError("❌ Invalid latest value: must be a non-empty string")
-  
+export const saveLastSeen = (members: LastSeen): void => {
+  if (!members || typeof members !== "object") throw new StateFileError("❌ Invalid latest value: must be a non-empty object")
+
   try {
     const stateData: StateData = {
-      lastSeen: latest,
+      lastSeen: members,
       lastUpdated: new Date().toISOString()
     }
 
