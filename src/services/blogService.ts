@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import type { Blog } from "../types/blog";
 import { titleParser } from "../utils/parser";
 import { config } from "../config";
+import { httpClient } from "../utils/http";
 
 export class BlogFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -12,10 +13,7 @@ export class BlogFetchError extends Error {
 
 export const getLatestBlog = async (memberId: number): Promise<Blog> => {
   try {
-    const res: Response = await fetch(`${config.blog.url}${memberId}`)
-    if (!res.ok) throw new BlogFetchError(`❌ Failed to fetch blog page of ${memberId}: ${res.status}`)
-
-    const html: string = await res.text()
+    const html: string = await httpClient.get(`${config.blog.url}${memberId}`)
     const $: cheerio.CheerioAPI = cheerio.load(html)
 
     const latestBlog = $(config.blog.element).first()
@@ -26,17 +24,11 @@ export const getLatestBlog = async (memberId: number): Promise<Blog> => {
 
     const rawTitle: string = latestBlog.text()
     if (!rawTitle.trim()) throw new BlogFetchError(`❌ Member ${memberId}: latest blog entry has no title`)
-    const title: string = titleParser(latestBlog.text())
 
+    const title: string = titleParser(latestBlog.text())
     const url: string = new URL(link, config.app.baseUrl).href
 
-    const blog: Blog = {
-      id: `${memberId}-${link}`,
-      title,
-      url,
-    }
-
-    return blog
+    return {id: `${memberId}-${link}`, title, url}
   } catch (error: any) {
     if (error instanceof BlogFetchError) throw error
     throw new BlogFetchError(`❌ Member ${memberId}: failed to fetch latest blog`, error)
