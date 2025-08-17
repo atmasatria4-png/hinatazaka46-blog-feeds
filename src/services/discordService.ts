@@ -1,4 +1,4 @@
-import { DISCORD_WEBHOOK } from "../constants";
+import { config } from "../config";
 import type { Blog } from "../types/blog";
 import { log } from "../utils/logger";
 
@@ -11,11 +11,11 @@ export class DiscordNotificationError extends Error {
 
 export const notifyDiscord = async (blog: Blog): Promise<void> => {
   try {
-    const res: Response = await fetch(DISCORD_WEBHOOK!, {
+    const res: Response = await fetch(config.discord.webhook, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
-        "User-Agent": "HinatazakaBlogMonitor/1.0"
+        "User-Agent": config.discord.userAgent,
       },
       body: JSON.stringify({
         content: `📝 New blog posted!\n**[${blog.title}](${blog.url})**\n`,

@@ -1,8 +1,8 @@
-import { DISCORD_WEBHOOK } from "../constants"
+import { config } from "../config"
 import { log } from "./logger"
 
 export const validateEnvironment = (): void => {
-  if (!DISCORD_WEBHOOK) {
+  if (!config.discord.webhook) {
     log("❌ Missing DISCORD_WEBHOOK!")
     process.exit(1)
   }

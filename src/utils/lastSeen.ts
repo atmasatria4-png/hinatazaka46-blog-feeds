@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "fs"
-import { STATE_FILE } from "../constants"
 import type { StateData } from "../types/state"
 import type { LastSeen } from "../types/seen"
+import { config } from "../config"
 
 export class StateFileError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -12,8 +12,8 @@ export class StateFileError extends Error {
 
 export const loadLastSeen = (): StateData => {
   try {
-    if (existsSync(STATE_FILE)) {
-      const data: string = readFileSync(STATE_FILE, "utf-8")
+    if (existsSync(config.app.stateFile)) {
+      const data: string = readFileSync(config.app.stateFile, "utf-8")
       const parsed: StateData = JSON.parse(data)
   
       if (typeof parsed.lastSeen !== "object") throw new StateFileError("❌ Invalid state file format: lastSeen must be an object")
@@ -40,7 +40,7 @@ export const saveLastSeen = (members: LastSeen): void => {
       lastUpdated: new Date().toISOString()
     }
 
-    writeFileSync(STATE_FILE, JSON.stringify(stateData, null, 2))
+    writeFileSync(config.app.stateFile, JSON.stringify(stateData, null, 2))
   } catch (error) {
     throw new StateFileError("❌ Failed to save last seen state", error)
   }

@@ -1,7 +1,7 @@
-import { BLOG_ELEMENT, BASE_URL, BLOG_URL } from "../constants"
 import * as cheerio from "cheerio";
 import type { Blog } from "../types/blog";
 import { titleParser } from "../utils/parser";
+import { config } from "../config";
 
 export class BlogFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -12,13 +12,13 @@ export class BlogFetchError extends Error {
 
 export const getLatestBlog = async (memberId: number): Promise<Blog> => {
   try {
-    const res: Response = await fetch(`${BLOG_URL}${memberId}`)
+    const res: Response = await fetch(`${config.blog.url}${memberId}`)
     if (!res.ok) throw new BlogFetchError(`❌ Failed to fetch blog page of ${memberId}: ${res.status}`)
 
     const html: string = await res.text()
     const $: cheerio.CheerioAPI = cheerio.load(html)
 
-    const latestBlog = $(BLOG_ELEMENT).first()
+    const latestBlog = $(config.blog.element).first()
     if (latestBlog.length === 0) throw new BlogFetchError(`❌ Member ${memberId}: no blog entries found on the page`)
 
     const link: string | undefined = latestBlog.attr("href")
@@ -28,7 +28,7 @@ export const getLatestBlog = async (memberId: number): Promise<Blog> => {
     if (!rawTitle.trim()) throw new BlogFetchError(`❌ Member ${memberId}: latest blog entry has no title`)
     const title: string = titleParser(latestBlog.text())
 
-    const url: string = new URL(link, BASE_URL).href
+    const url: string = new URL(link, config.app.baseUrl).href
 
     const blog: Blog = {
       id: `${memberId}-${link}`,

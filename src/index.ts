@@ -1,4 +1,3 @@
-import { MEMBER_IDS } from "./constants"
 import type { Blog } from "./types/blog"
 import type { StateData } from "./types/state"
 import { getLatestBlog } from "./services/blogService"
@@ -6,6 +5,7 @@ import { notifyDiscord } from "./services/discordService"
 import { loadLastSeen, saveLastSeen } from "./utils/lastSeen"
 import { log } from "./utils/logger"
 import { validateEnvironment } from "./utils/validation"
+import { config } from "./config"
 
 const processMember = async (memberId: number, stateData: StateData): Promise<void> => {
   try {
@@ -35,7 +35,7 @@ const main = async (): Promise<void> => {
     const stateData: StateData = loadLastSeen()
 
     await Promise.allSettled(
-      MEMBER_IDS.map(memberId => processMember(memberId, stateData))
+      config.app.memberIds.map(memberId => processMember(memberId, stateData)),
     )
 
     saveLastSeen(stateData.lastSeen)
