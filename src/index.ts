@@ -27,7 +27,7 @@ const processMember = async (memberId: number, stateData: StateData): Promise<vo
   }
 }
 
-const main = async (): Promise<void> => {
+export const main = async (): Promise<void> => {
   try {
     validateEnvironment()
     log.base("🚀 Starting blog monitor...")
