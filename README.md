@@ -138,7 +138,7 @@ PRs and issues welcome! Please:
 - Practice with Bun, TypeScript, and clean architecture.
 
 ## 📜 License
-This project is licensed under the MIT License. See the [MIT LICENSE](./LICENSE) file for details/
+This project is licensed under the MIT License. See the [MIT LICENSE](./LICENSE) file for details.
 
 ## 🧍 Author
 This project is maintained by [alfianchii](https://github.com/alfianchii).
