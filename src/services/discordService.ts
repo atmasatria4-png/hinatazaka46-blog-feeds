@@ -27,7 +27,7 @@ export const notifyDiscord = async (blog: Blog): Promise<void> => {
       throw new DiscordNotificationError(`❌ Discord API returned ${res.status}: ${errorText}`)
     }
 
-    log("📤 Discord notification sent successfully")
+    log.base("📤 Discord notification sent successfully")
   } catch (error: any) {
     if (error instanceof DiscordNotificationError) throw error
     throw new DiscordNotificationError("❌ Failed to send Discord notification", error)

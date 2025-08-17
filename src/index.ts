@@ -13,24 +13,24 @@ const processMember = async (memberId: number, stateData: StateData): Promise<vo
     const latestBlogId = stateData.lastSeen[memberId]!
 
     if (blog.id !== latestBlogId) {
-      log(`🔔 New blog detected: ${blog.title}`)
+      log.base(`🔔 New blog detected: ${blog.title}`)
 
       await notifyDiscord(blog)
       stateData.lastSeen[memberId] = blog.id
 
-      log(`✅ Member ${memberId}: notification sent and state saved`)
+      log.success(`Member ${memberId}: notification sent and state saved`)
     } else {
-      log(`✨ Member ${memberId}: no new blog`)
+      log.info(`Member ${memberId}: no new blog`)
     }
   } catch (error: any) {
-    log(`❌ Failed to process member ${memberId}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    log.error(`Failed to process member ${memberId}: ${error instanceof Error ? error.message : 'Unknown error'}`)
   }
 }
 
 const main = async (): Promise<void> => {
   try {
     validateEnvironment()
-    log("🚀 Starting blog monitor...")
+    log.base("🚀 Starting blog monitor...")
 
     const stateData: StateData = loadLastSeen()
 
@@ -39,10 +39,10 @@ const main = async (): Promise<void> => {
     )
 
     saveLastSeen(stateData.lastSeen)
-    log("✅ Blog monitor completed successfully")
+    log.success("Blog monitor completed successfully")
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    log(`❌ Critical error in main process: ${errorMessage}`)
+    log.error(`Critical error in main process: ${errorMessage}`)
     process.exit(1)
   }
 }
