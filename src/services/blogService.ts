@@ -1,7 +1,7 @@
 import { BLOG_ELEMENT, BASE_URL, BLOG_URL } from "../constants"
 import * as cheerio from "cheerio";
 import type { Blog } from "../types/blog";
-import { titleParser } from "./parser";
+import { titleParser } from "../utils/parser";
 
 export class BlogFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {

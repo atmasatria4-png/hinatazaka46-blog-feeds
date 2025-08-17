@@ -1,6 +1,6 @@
 import { DISCORD_WEBHOOK } from "../constants";
 import type { Blog } from "../types/blog";
-import { log } from "./logger";
+import { log } from "../utils/logger";
 
 export class DiscordNotificationError extends Error {
   constructor(message: string, public override cause?: unknown) {
