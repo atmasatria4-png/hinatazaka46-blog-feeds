@@ -40,3 +40,31 @@ export const elementParser = (
     throw new ParserError(`❌ Parse Element: failed to parse ${identifier}`, error)
   }
 }
+
+export const timeParser = (time: string, sourceOffsetHours: number = 0): string => {
+  if (!time) throw new ParserError("❌ Empty time string")
+
+  const match = time.match(/^(\d{4})\.(\d{1,2})\.(\d{1,2}) (\d{1,2}):(\d{2})$/)
+  if (!match) throw new ParserError(`❌ Invalid time format: ${time}`)
+
+  const [, y, m, d, h, min] = match
+  let date
+
+  const dateMs = Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h) - (sourceOffsetHours ?? 0), Number(min));
+  if (sourceOffsetHours) date = new Date(dateMs);
+  else date = new Date(
+    Number(y),
+    Number(m) - 1,
+    Number(d),
+    Number(h),
+    Number(min)
+  )
+
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours().toString().padStart(2, "0")
+  const minute = date.getMinutes().toString().padStart(2, "0")
+
+  return `${year}年${month}月${day}日, ${hour}時${minute}分`
+}

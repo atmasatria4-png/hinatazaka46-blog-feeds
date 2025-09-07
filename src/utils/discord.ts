@@ -1,4 +1,5 @@
 import type { Blog } from "../types/blog"
+import { timeParser } from "./parser"
 
 export class DiscordError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -8,6 +9,7 @@ export class DiscordError extends Error {
 }
 
 export const generateDiscordContent = (blog: Blog): string => `
-👸🏻 New blog posted!
-**[${blog.title}](${blog.url})**
+# 🐰💭♡ ${blog.author.name} (${blog.author.kana})
+💌✨☆ **[${blog.title}](${blog.url})**
+📅⏰♫ ${timeParser(blog.time)} (🇯🇵) 〜✧✦〜 ${timeParser(blog.time, 9)} (🇮🇩)
 `
