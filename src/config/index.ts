@@ -1,6 +1,6 @@
 import type { Config } from "../types/config";
 
-const BLOG_BASE_URL = "https://www.hinatazaka46.com";
+const BLOG_BASE_URL: string = "https://www.hinatazaka46.com";
 
 export const config: Config = {
   discord: {
@@ -9,7 +9,9 @@ export const config: Config = {
   },
   blog: {
     url: `${BLOG_BASE_URL}/s/official/diary/member/list?ct=`,
-    element: ".p-blog-entry__list a",
+    author: ".c-blog-page__subtitle",
+    postedAt: ".c-blog-article__date",
+    entry: ".p-blog-entry__list a",
   },
   app: {
     baseUrl: BLOG_BASE_URL,

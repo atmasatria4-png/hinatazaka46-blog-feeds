@@ -24,7 +24,7 @@ export const httpClient = {
   post: async (url: string, body: unknown): Promise<void> => {
     const res = await fetch(url, {
       method: "POST",
-      headers: {"Content-Type": "application/json", "User-Agent": config.discord.userAgent},
+      headers: { "Content-Type": "application/json", "User-Agent": config.discord.userAgent },
       body: JSON.stringify(body),
     })
     if (!res.ok) {
