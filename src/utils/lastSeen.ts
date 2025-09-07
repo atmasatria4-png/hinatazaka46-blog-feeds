@@ -15,9 +15,9 @@ export const loadLastSeen = (): StateData => {
     if (existsSync(config.app.stateFile)) {
       const data: string = readFileSync(config.app.stateFile, "utf-8")
       const parsed: StateData = JSON.parse(data)
-  
+
       if (typeof parsed.lastSeen !== "object") throw new StateFileError("❌ Invalid state file format: lastSeen must be an object")
-  
+
       return parsed
     }
 

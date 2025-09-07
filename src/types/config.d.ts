@@ -13,7 +13,9 @@ interface DiscordConfig {
 
 interface BlogConfig {
   url: string;
-  element: string;
+  author: string;
+  postedAt: string;
+  entry: string;
 }
 
 export interface Config {

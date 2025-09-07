@@ -1,8 +1,9 @@
 import * as cheerio from "cheerio";
 import type { Blog } from "../types/blog";
-import { titleParser } from "../utils/parser";
+import { elementParser } from "../utils/parser";
 import { config } from "../config";
 import { httpClient } from "../utils/http";
+import type { ElementParser } from "../types/element";
 
 export class BlogFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -16,19 +17,13 @@ export const getLatestBlog = async (memberId: number): Promise<Blog> => {
     const html: string = await httpClient.get(`${config.blog.url}${memberId}`)
     const $: cheerio.CheerioAPI = cheerio.load(html)
 
-    const latestBlog = $(config.blog.element).first()
-    if (latestBlog.length === 0) throw new BlogFetchError(`❌ Member ${memberId}: no blog entries found on the page`)
+    const { text: title, link }: ElementParser = elementParser($, memberId, config.blog.entry, true)
+    const url: string = new URL(link!, config.app.baseUrl).href
 
-    const link: string | undefined = latestBlog.attr("href")
-    if (!link) throw new BlogFetchError(`❌ Member ${memberId}: latest blog entry has no href attribute`)
+    const author: string = elementParser($, memberId, config.blog.author).text
+    const time: string = elementParser($, memberId, config.blog.postedAt).text
 
-    const rawTitle: string = latestBlog.text()
-    if (!rawTitle.trim()) throw new BlogFetchError(`❌ Member ${memberId}: latest blog entry has no title`)
-
-    const title: string = titleParser(latestBlog.text())
-    const url: string = new URL(link, config.app.baseUrl).href
-
-    return {id: `${memberId}-${link}`, title, url}
+    return { id: `${url}`, author, title, url, time }
   } catch (error: any) {
     if (error instanceof BlogFetchError) throw error
     throw new BlogFetchError(`❌ Member ${memberId}: failed to fetch latest blog`, error)

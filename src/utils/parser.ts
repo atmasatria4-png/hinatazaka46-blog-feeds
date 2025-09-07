@@ -1,3 +1,6 @@
+import * as cheerio from "cheerio";
+import type { ElementParser } from "../types/element";
+
 export class ParserError extends Error {
   constructor(message: string, public override cause?: unknown) {
     super(message)
@@ -5,7 +8,7 @@ export class ParserError extends Error {
   }
 }
 
-export const titleParser = (title: string): string => {
+const textParser = (title: string): string => {
   if (!title) throw new ParserError("❌ There was nothing to parse")
 
   return title
@@ -13,4 +16,27 @@ export const titleParser = (title: string): string => {
     .map(line => line.trim())
     .filter(line => line.length > 0)
     .join("\n")
+}
+
+export const elementParser = (
+  cheerio: cheerio.CheerioAPI,
+  memberId: number,
+  identifier: string,
+  isHref: boolean = false,
+): ElementParser => {
+  try {
+    const element = cheerio(identifier).first()
+    if (element.length === 0) throw new ParserError(`❌ Member ${memberId}: no ${identifier} found on the page`)
+    const text: string = textParser(element.text())
+
+    if (!isHref) return { text }
+
+    const link: string | undefined = element.attr("href")
+    if (!link) throw new ParserError(`❌ Member ${memberId}: ${identifier} has no href attribute`)
+
+    return { text, link }
+  } catch (error: any) {
+    if (error instanceof ParserError) throw error
+    throw new ParserError(`❌ Parse Element: failed to parse ${identifier}`, error)
+  }
 }
