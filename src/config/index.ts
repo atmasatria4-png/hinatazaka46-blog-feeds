@@ -9,7 +9,11 @@ export const config: Config = {
   },
   blog: {
     url: `${BLOG_BASE_URL}/s/official/diary/member/list?ct=`,
-    author: ".c-blog-page__subtitle",
+    author: {
+      name: ".c-blog-member__name",
+      kana: ".c-blog-member__kana",
+    },
+    title: ".c-blog-article__title",
     postedAt: ".c-blog-article__date",
     entry: ".p-blog-entry__list a",
   },

@@ -13,7 +13,11 @@ interface DiscordConfig {
 
 interface BlogConfig {
   url: string;
-  author: string;
+  author: {
+    name: string;
+    kana: string;
+  };
+  title: string;
   postedAt: string;
   entry: string;
 }
