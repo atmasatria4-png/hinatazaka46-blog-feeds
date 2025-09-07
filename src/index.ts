@@ -10,13 +10,13 @@ import { config } from "./config"
 const processMember = async (memberId: number, stateData: StateData): Promise<void> => {
   try {
     const blog: Blog = await getLatestBlog(memberId)
-    const latestBlogId = stateData.lastSeen[memberId]!
+    const latestData = stateData.lastSeen[memberId]!
 
-    if (blog.id !== latestBlogId) {
+    if (blog.id !== latestData?.blog) {
       log.base(`🔔 New blog detected: ${blog.title}`)
 
       await notifyDiscord(blog)
-      stateData.lastSeen[memberId] = blog.id
+      stateData.lastSeen[memberId] = { blog: blog.id }
 
       log.success(`Member ${memberId}: notification sent and state saved`)
     } else {

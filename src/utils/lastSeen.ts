@@ -11,22 +11,23 @@ export class StateFileError extends Error {
 }
 
 export const loadLastSeen = (): StateData => {
+  const defaultState: StateData = {
+    lastSeen: {},
+    lastUpdated: undefined,
+  }
+
+  if (!existsSync(config.app.stateFile)) return defaultState
+
   try {
-    if (existsSync(config.app.stateFile)) {
-      const data: string = readFileSync(config.app.stateFile, "utf-8")
-      const parsed: StateData = JSON.parse(data)
+    const data = readFileSync(config.app.stateFile, "utf-8")
+    if (!data) return defaultState
 
-      if (typeof parsed.lastSeen !== "object") throw new StateFileError("❌ Invalid state file format: lastSeen must be an object")
+    const parsed = JSON.parse(data) as StateData
+    if (!parsed || typeof parsed !== "object" || typeof parsed.lastSeen !== "object") throw new StateFileError("❌ Invalid state file format: lastSeen must be an object")
 
-      return parsed
-    }
-
-    return {
-      lastSeen: {},
-      lastUpdated: undefined
-    }
-  } catch (error: any) {
-    if (error instanceof SyntaxError) throw new StateFileError("❌ State file contains invalid JSON", error)
+    return parsed
+  } catch (error) {
+    if (error instanceof StateFileError) throw new StateFileError("❌ State file contains invalid JSON", error)
     throw new StateFileError("❌ Failed to load last seen state", error)
   }
 }

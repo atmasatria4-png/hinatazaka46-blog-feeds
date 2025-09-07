@@ -1,3 +1,5 @@
 export interface LastSeen {
-  [memberId: string]: string
+  [memberId: string]: {
+    blog: string;
+  }
 }
