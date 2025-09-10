@@ -1,9 +1,11 @@
 {
-	"lastSeen": {
-		"blog": {
-			"34": "https://www.hinatazaka46.com/s/official/diary/detail/65563?ima=0000&cd=member"
-		},
-		"greetingCard": {}
-	},
-	"lastUpdated": "2025-09-10T07:56:12.080Z"
+  "lastSeen": {
+    "blog": {
+      "34": "https://www.hinatazaka46.com/s/official/diary/detail/65563?ima=0000&cd=member"
+    },
+    "greetingCard": {
+      "34": "https://cdn.hinatazaka46.com/images/14/0b5/bb42ae9da6e254232186e9e96816c.jpg"
+    }
+  },
+  "lastUpdated": "2025-09-10T12:20:35.573Z"
 }

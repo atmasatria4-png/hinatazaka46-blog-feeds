@@ -4,6 +4,7 @@ import { log } from "./utils/logger"
 import { validateEnvironment } from "./utils/validation"
 import { config } from "./config"
 import { blogChecking } from "./services/blogService"
+import { greetingCardChecking } from "./services/greetingCardService"
 
 export const main = async (): Promise<void> => {
   try {
@@ -19,6 +20,9 @@ export const main = async (): Promise<void> => {
     log.success("Done blog checking~");
 
     log.check(`Greeting card checking...`)
+    await Promise.allSettled(
+      config.app.memberIds.map(memberId => greetingCardChecking(memberId, stateData.lastSeen.greetingCard)),
+    )
     log.success("Done greeting card checking~");
 
     saveLastSeen(stateData.lastSeen)
