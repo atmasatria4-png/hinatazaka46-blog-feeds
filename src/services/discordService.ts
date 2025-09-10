@@ -12,14 +12,10 @@ export class DiscordNotificationError extends Error {
 
 export const notifyToDiscord = async (content: string, embeds?: DiscordEmbed[]): Promise<void> => {
   try {
-    await httpClient.post(config.discord.webhook, {
-      content,
-      embeds,
-    });
-
+    await httpClient.post(config.discord.webhook, { content, embeds });
     log.base("📤 Discord notification sent successfully")
   } catch (error: any) {
     if (error instanceof DiscordNotificationError) throw error
-    throw new DiscordNotificationError("❌ BLOG - Failed to send Discord notification", error)
+    throw new DiscordNotificationError("❌ Failed to send Discord notification", error)
   }
 }
