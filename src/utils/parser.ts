@@ -19,13 +19,13 @@ const textParser = (title: string): string => {
 }
 
 export const elementParser = (
-  cheerio: cheerio.CheerioAPI,
+  $: cheerio.CheerioAPI,
   memberId: number,
   identifier: string,
   isHref: boolean = false,
 ): ElementParser => {
   try {
-    const element = cheerio(identifier).first()
+    const element = $(identifier).first()
     if (element.length === 0) throw new ParserError(`❌ Member ${memberId}: no ${identifier} found on the page`)
     const text: string = textParser(element.text())
 
