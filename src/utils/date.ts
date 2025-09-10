@@ -16,3 +16,5 @@ export const isWithinJktDayRange = (min: number, max: number, d: Date = new Date
   const day = getCurrentJktDayOfMonth(d);
   return day >= min && day <= max;
 };
+
+export const timestamp = (): string => new Date().toISOString()
