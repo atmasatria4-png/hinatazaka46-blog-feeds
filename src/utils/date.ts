@@ -5,7 +5,7 @@ export class DateError extends Error {
   }
 }
 
-export const japaneseTimeStyle = (time: string, sourceOffsetHours: number = 0): string => {
+export const japaneseTimeStyle = (time: string, sourceUtcOffsetHours: number = 0): string => {
   if (!time) throw new DateError("❌ Empty time string")
 
   const match = time.match(/^(\d{4})\.(\d{1,2})\.(\d{1,2}) (\d{1,2}):(\d{2})$/)
@@ -14,8 +14,8 @@ export const japaneseTimeStyle = (time: string, sourceOffsetHours: number = 0): 
   const [, y, m, d, h, min] = match
   let date
 
-  const dateMs = Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h) - (sourceOffsetHours ?? 0), Number(min));
-  if (sourceOffsetHours) date = new Date(dateMs);
+  const dateMs = Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h) - (sourceUtcOffsetHours ?? 0), Number(min));
+  if (sourceUtcOffsetHours) date = new Date(dateMs);
   else date = new Date(
     Number(y),
     Number(m) - 1,
