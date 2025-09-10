@@ -2,7 +2,7 @@ import * as cheerio from "cheerio";
 import { httpClient } from "../utils/http";
 import { log } from "../utils/logger";
 import { notifyToDiscord } from "./discordService";
-import { elementParser } from "../utils/parser";
+import { elementParser, imageSrcParser } from "../utils/parser";
 import { config } from "../config";
 import { generateGreetingCardContent, generateGreetingCardEmbeds } from "../utils/discord";
 import { getCurrentJktMonth, isWithinJktDayRange } from "../utils/date";
@@ -20,12 +20,12 @@ export const getLatestGreetingCard = async (memberId: number): Promise<GreetingC
     const html: string = await httpClient.get(`${config.greetingCard.url}${memberId}`)
     const $: cheerio.CheerioAPI = cheerio.load(html)
 
-    const greetingCardSrc: string = $(`${config.greetingCard.card}`).attr("src")!
+    const cardSrc: string = imageSrcParser($, config.greetingCard.card)
     const name: string = elementParser($, memberId, config.greetingCard.author.name).text
     const kana: string = elementParser($, memberId, config.greetingCard.author.kana).text
     const month: number = getCurrentJktMonth()
 
-    return { id: greetingCardSrc, author: { name, kana }, month, url: greetingCardSrc }
+    return { id: cardSrc, author: { name, kana }, month, url: cardSrc }
   } catch (error: any) {
     if (error instanceof GreetingCardFetchError) throw error
     throw new GreetingCardFetchError(`❌ Member ${memberId}: failed to fetch latest greeting card`, error)
@@ -34,8 +34,8 @@ export const getLatestGreetingCard = async (memberId: number): Promise<GreetingC
 
 export const greetingCardChecking = async (memberId: number, greetingIds: MemberIds): Promise<void> => {
   try {
-    if (!isWithinJktDayRange(1, 5)) {
-      log.info(`Member ${memberId}: skipped (outside 1–5 JKT)`);
+    if (!isWithinJktDayRange(1, 3)) {
+      log.info(`Member ${memberId}: skipped (outside 1–3 JKT)`);
       return;
     }
 

@@ -40,3 +40,21 @@ export const elementParser = (
     throw new ParserError(`❌ Parse Element: failed to parse ${identifier}`, error)
   }
 }
+
+export const imageSrcParser = (
+  $: cheerio.CheerioAPI,
+  identifier: string,
+): string => {
+  try {
+    const raw = $(identifier)
+    if (raw.length === 0) throw new ParserError(`❌ No ${identifier} found on the page`);
+
+    const element = raw.attr("src")
+    if (!element) throw new ParserError(`❌ ${identifier} does not have a src attribute`);
+
+    return element;
+  } catch (error: any) {
+    if (error instanceof ParserError) throw error
+    throw new ParserError(`❌ Parse Element: failed to parse ${identifier}`, error)
+  }
+}
