@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import type { ElementParser } from "../types/element";
+import type { ElementParser } from "../types/app";
 
 export class ParserError extends Error {
   constructor(message: string, public override cause?: unknown) {

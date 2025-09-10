@@ -1,8 +1,11 @@
 import * as cheerio from "cheerio";
-import type { Blog } from "../types/blog";
 import { elementParser } from "../utils/parser";
 import { config } from "../config";
 import { httpClient } from "../utils/http";
+import { notifyToDiscord } from "./discordService";
+import { log } from "../utils/logger";
+import { generateBlogContent } from "../utils/discord";
+import type { Blog, MemberIds } from "../types/app";
 
 export class BlogFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {
@@ -27,5 +30,25 @@ export const getLatestBlog = async (memberId: number): Promise<Blog> => {
   } catch (error: any) {
     if (error instanceof BlogFetchError) throw error
     throw new BlogFetchError(`❌ Member ${memberId}: failed to fetch latest blog`, error)
+  }
+}
+
+export const blogChecking = async (memberId: number, blogIds: MemberIds): Promise<void> => {
+  try {
+    const latestBlog: Blog = await getLatestBlog(memberId)
+
+    const prevBlogId = blogIds?.[memberId]
+    if (prevBlogId === latestBlog.id) {
+      log.info(`Member ${memberId}: no new blog`)
+      return
+    }
+
+    log.base(`🔔 New blog detected: ${latestBlog.title}`)
+    const content = generateBlogContent(latestBlog)
+    await notifyToDiscord(content)
+    blogIds[memberId] = latestBlog.id
+    log.info(`Done checking blog for member ${memberId}`)
+  } catch (error: any) {
+    log.error(`Failed to process member ${memberId}: ${error instanceof Error ? error.message : 'Unknown error'}`)
   }
 }

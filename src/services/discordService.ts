@@ -1,6 +1,5 @@
 import { config } from "../config";
-import type { Blog } from "../types/blog";
-import { generateDiscordContent } from "../utils/discord";
+import type { DiscordEmbed } from "../types/discord";
 import { httpClient } from "../utils/http";
 import { log } from "../utils/logger";
 
@@ -11,15 +10,16 @@ export class DiscordNotificationError extends Error {
   }
 }
 
-export const notifyDiscord = async (blog: Blog): Promise<void> => {
+export const notifyToDiscord = async (content: string, embeds?: DiscordEmbed[]): Promise<void> => {
   try {
-    const content: string = generateDiscordContent(blog)
-
-    await httpClient.post(config.discord.webhook, { content })
+    await httpClient.post(config.discord.webhook, {
+      content,
+      embeds,
+    });
 
     log.base("📤 Discord notification sent successfully")
   } catch (error: any) {
     if (error instanceof DiscordNotificationError) throw error
-    throw new DiscordNotificationError("❌ Failed to send Discord notification", error)
+    throw new DiscordNotificationError("❌ BLOG - Failed to send Discord notification", error)
   }
 }

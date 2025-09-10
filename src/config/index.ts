@@ -1,6 +1,6 @@
 import type { Config } from "../types/config";
 
-const BLOG_BASE_URL: string = "https://www.hinatazaka46.com";
+const BASE_URL: string = "https://www.hinatazaka46.com";
 
 export const config: Config = {
   discord: {
@@ -8,7 +8,7 @@ export const config: Config = {
     userAgent: "HinatazakaBlogMonitor/1.0"
   },
   blog: {
-    url: `${BLOG_BASE_URL}/s/official/diary/member/list?ct=`,
+    url: `${BASE_URL}/s/official/diary/member/list?ct=`,
     author: {
       name: ".c-blog-member__name",
       kana: ".c-blog-member__kana",
@@ -17,8 +17,16 @@ export const config: Config = {
     postedAt: ".c-blog-article__date",
     entry: ".p-blog-entry__list a",
   },
+  greetingCard: {
+    url: `${BASE_URL}/s/official/artist/`,
+    author: {
+      name: ".c-member__name--info",
+      kana: ".c-member__kana",
+    },
+    card: ".gimg_wrap.sub > img",
+  },
   app: {
-    baseUrl: BLOG_BASE_URL,
+    baseUrl: BASE_URL,
     stateFile: "last_seen.json",
     memberIds: [34, 36],
   },
