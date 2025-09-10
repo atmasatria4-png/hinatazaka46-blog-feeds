@@ -3,8 +3,7 @@ import type { Blog } from "../types/blog";
 import { elementParser } from "../utils/parser";
 import { config } from "../config";
 import { httpClient } from "../utils/http";
-import type { StateData } from "../types/state";
-import { notifyLatestBlogToDiscord } from "./discordService";
+import { notifyToDiscord } from "./discordService";
 import { log } from "../utils/logger";
 import type { MemberIds } from "../types/seen";
 import { generateBlogContent } from "../utils/discord";
@@ -35,21 +34,21 @@ export const getLatestBlog = async (memberId: number): Promise<Blog> => {
   }
 }
 
-export const blogChecking = async (memberId: number, blog: MemberIds): Promise<void> => {
+export const blogChecking = async (memberId: number, blogIds: MemberIds): Promise<void> => {
   try {
     const latestBlog: Blog = await getLatestBlog(memberId)
 
-    const prevBlogId = blog?.[memberId]
+    const prevBlogId = blogIds?.[memberId]
     if (prevBlogId === latestBlog.id) {
-      log.info(`Member ${memberId}: no new blog`);
-      return;
+      log.info(`Member ${memberId}: no new blog`)
+      return
     }
 
-    log.base(`🔔 New blog detected: ${latestBlog.title}`);
-    const content = generateBlogContent(latestBlog);
-    await notifyLatestBlogToDiscord(content);
-    blog[memberId] = latestBlog.id;
-    log.info(`Done checking blog for member ${memberId}`);
+    log.base(`🔔 New blog detected: ${latestBlog.title}`)
+    const content = generateBlogContent(latestBlog)
+    await notifyToDiscord(content)
+    blogIds[memberId] = latestBlog.id
+    log.info(`Done checking blog for member ${memberId}`)
   } catch (error: any) {
     log.error(`Failed to process member ${memberId}: ${error instanceof Error ? error.message : 'Unknown error'}`)
   }
