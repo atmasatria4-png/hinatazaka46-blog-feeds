@@ -1,5 +1,3 @@
-import type { LastSeen } from "./seen"
-
 interface AppConfig {
   baseUrl: string;
   stateFile: string;
