@@ -8,7 +8,7 @@ export class DiscordError extends Error {
   }
 }
 
-export const generateDiscordContent = (blog: Blog): string => `
+export const generateBlogContent = (blog: Blog): string => `
 # 🐰💭♡ ${blog.author.name} (${blog.author.kana})
 💌✨☆ **[${blog.title}](${blog.url})**
 📅⏰♫ ${timeParser(blog.time)} (🇯🇵) 〜✧✦〜 ${timeParser(blog.time, 9)} (🇮🇩)

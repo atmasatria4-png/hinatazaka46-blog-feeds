@@ -12,17 +12,22 @@ export class StateFileError extends Error {
 
 export const loadLastSeen = (): StateData => {
   const defaultState: StateData = {
-    lastSeen: {},
-    lastUpdated: undefined,
+    lastSeen: {
+      blog: {},
+      greetingCard: {},
+    },
+    lastUpdated: null,
   }
 
   if (!existsSync(config.app.stateFile)) return defaultState
 
   try {
     const data = readFileSync(config.app.stateFile, "utf-8")
+
     if (!data) return defaultState
 
     const parsed = JSON.parse(data) as StateData
+
     if (!parsed || typeof parsed !== "object" || typeof parsed.lastSeen !== "object") throw new StateFileError("❌ Invalid state file format: lastSeen must be an object")
 
     return parsed
@@ -32,12 +37,12 @@ export const loadLastSeen = (): StateData => {
   }
 }
 
-export const saveLastSeen = (members: LastSeen): void => {
-  if (!members || typeof members !== "object") throw new StateFileError("❌ Invalid latest value: must be a non-empty object")
+export const saveLastSeen = (features: LastSeen): void => {
+  if (!features || typeof features !== "object") throw new StateFileError("❌ Invalid latest value: must be a non-empty object")
 
   try {
     const stateData: StateData = {
-      lastSeen: members,
+      lastSeen: features,
       lastUpdated: new Date().toISOString()
     }
 

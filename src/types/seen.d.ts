@@ -1,5 +1,6 @@
+export type MemberIds = Record<string, string>
+
 export interface LastSeen {
-  [memberId: string]: {
-    blog: string;
-  }
+  blog: MemberIds;
+  greetingCard: MemberIds;
 }

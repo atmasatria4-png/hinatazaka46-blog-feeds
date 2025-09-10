@@ -1,8 +1,9 @@
 {
 	"lastSeen": {
-		"34": {
-			"blog": "https://www.hinatazaka46.com/s/official/diary/detail/65563?ima=0000&cd=member"
-		}
+		"blog": {
+			"34": "https://www.hinatazaka46.com/s/official/diary/detail/65563?ima=0000&cd=member"
+		},
+		"greetingCard": {}
 	},
-	"lastUpdated": "2025-09-07T13:14:38.981Z"
+	"lastUpdated": "2025-09-10T07:56:12.080Z"
 }
