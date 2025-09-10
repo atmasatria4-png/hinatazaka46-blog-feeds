@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "fs"
-import type { StateData } from "../types/state"
-import type { LastSeen } from "../types/seen"
 import { config } from "../config"
+import type { LastSeen, StateData } from "../types/app"
 
 export class StateFileError extends Error {
   constructor(message: string, public override cause?: unknown) {

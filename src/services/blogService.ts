@@ -1,12 +1,11 @@
 import * as cheerio from "cheerio";
-import type { Blog } from "../types/blog";
 import { elementParser } from "../utils/parser";
 import { config } from "../config";
 import { httpClient } from "../utils/http";
 import { notifyToDiscord } from "./discordService";
 import { log } from "../utils/logger";
-import type { MemberIds } from "../types/seen";
 import { generateBlogContent } from "../utils/discord";
+import type { Blog, MemberIds } from "../types/app";
 
 export class BlogFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {

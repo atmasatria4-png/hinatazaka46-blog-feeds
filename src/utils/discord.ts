@@ -1,6 +1,5 @@
-import type { Blog } from "../types/blog"
+import type { Blog, GreetingCard } from "../types/app"
 import type { DiscordEmbed } from "../types/discord"
-import type { GreetingCard } from "../types/greetingCard"
 import { timeParser } from "./parser"
 
 export class DiscordError extends Error {

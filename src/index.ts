@@ -1,10 +1,10 @@
-import type { StateData } from "./types/state"
 import { loadLastSeen, saveLastSeen } from "./utils/lastSeen"
 import { log } from "./utils/logger"
 import { validateEnvironment } from "./utils/validation"
 import { config } from "./config"
 import { blogChecking } from "./services/blogService"
 import { greetingCardChecking } from "./services/greetingCardService"
+import type { StateData } from "./types/app"
 
 export const main = async (): Promise<void> => {
   try {

@@ -1,6 +1,4 @@
 import * as cheerio from "cheerio";
-import type { GreetingCard } from "../types/greetingCard";
-import type { MemberIds } from "../types/seen";
 import { httpClient } from "../utils/http";
 import { log } from "../utils/logger";
 import { notifyToDiscord } from "./discordService";
@@ -8,6 +6,7 @@ import { elementParser } from "../utils/parser";
 import { config } from "../config";
 import { generateGreetingCardContent, generateGreetingCardEmbeds } from "../utils/discord";
 import { getCurrentJktMonth, isWithinJktDayRange } from "../utils/date";
+import type { GreetingCard, MemberIds } from "../types/app";
 
 export class GreetingCardFetchError extends Error {
   constructor(message: string, public override cause?: unknown) {
