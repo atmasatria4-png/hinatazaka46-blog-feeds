@@ -23,7 +23,7 @@ export const config: Config = {
       name: ".c-member__name--info",
       kana: ".c-member__kana",
     },
-    card: ".gimg_wrap sub",
+    card: ".gimg_wrap.sub > img",
   },
   app: {
     baseUrl: BASE_URL,
