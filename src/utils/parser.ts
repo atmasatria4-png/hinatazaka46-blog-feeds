@@ -19,13 +19,13 @@ const textParser = (title: string): string => {
 }
 
 export const elementParser = (
-  cheerio: cheerio.CheerioAPI,
+  $: cheerio.CheerioAPI,
   memberId: number,
   identifier: string,
   isHref: boolean = false,
 ): ElementParser => {
   try {
-    const element = cheerio(identifier).first()
+    const element = $(identifier).first()
     if (element.length === 0) throw new ParserError(`❌ Member ${memberId}: no ${identifier} found on the page`)
     const text: string = textParser(element.text())
 
@@ -41,30 +41,20 @@ export const elementParser = (
   }
 }
 
-export const timeParser = (time: string, sourceOffsetHours: number = 0): string => {
-  if (!time) throw new ParserError("❌ Empty time string")
+export const imageSrcParser = (
+  $: cheerio.CheerioAPI,
+  identifier: string,
+): string => {
+  try {
+    const raw = $(identifier)
+    if (raw.length === 0) throw new ParserError(`❌ No ${identifier} found on the page`);
 
-  const match = time.match(/^(\d{4})\.(\d{1,2})\.(\d{1,2}) (\d{1,2}):(\d{2})$/)
-  if (!match) throw new ParserError(`❌ Invalid time format: ${time}`)
+    const element = raw.attr("src")
+    if (!element) throw new ParserError(`❌ ${identifier} does not have a src attribute`);
 
-  const [, y, m, d, h, min] = match
-  let date
-
-  const dateMs = Date.UTC(Number(y), Number(m) - 1, Number(d), Number(h) - (sourceOffsetHours ?? 0), Number(min));
-  if (sourceOffsetHours) date = new Date(dateMs);
-  else date = new Date(
-    Number(y),
-    Number(m) - 1,
-    Number(d),
-    Number(h),
-    Number(min)
-  )
-
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hour = date.getHours().toString().padStart(2, "0")
-  const minute = date.getMinutes().toString().padStart(2, "0")
-
-  return `${year}年${month}月${day}日, ${hour}時${minute}分`
+    return element;
+  } catch (error: any) {
+    if (error instanceof ParserError) throw error
+    throw new ParserError(`❌ Parse Element: failed to parse ${identifier}`, error)
+  }
 }
