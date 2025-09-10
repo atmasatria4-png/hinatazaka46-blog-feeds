@@ -14,12 +14,14 @@ export const main = async (): Promise<void> => {
     const stateData: StateData = loadLastSeen()
 
     log.check(`Blog checking...`)
+    stateData.lastSeen.blog ??= {}
     await Promise.allSettled(
       config.app.memberIds.map(memberId => blogChecking(memberId, stateData.lastSeen.blog)),
     )
     log.success("Done blog checking~");
 
     log.check(`Greeting card checking...`)
+    stateData.lastSeen.greetingCard ??= {}
     await Promise.allSettled(
       config.app.memberIds.map(memberId => greetingCardChecking(memberId, stateData.lastSeen.greetingCard)),
     )
